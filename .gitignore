@@ -130,3 +130,5 @@ dmypy.json
 
 #
 cache/
+data/traceroute
+data/Peers/*.md

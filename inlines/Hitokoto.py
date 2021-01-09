@@ -9,7 +9,7 @@ enabled = True
 
 
 def load():
-    pass
+    print("YiYan Inline Plugin Loaded!")
 
 def filter(arg):
     return arg == ""

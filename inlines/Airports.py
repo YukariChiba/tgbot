@@ -17,6 +17,7 @@ def load():
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
         for row in spamreader:
             airports.append(row)
+    print("Airports Inline Plugin Loaded!")
 
 
 def filter(arg):

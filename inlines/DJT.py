@@ -14,6 +14,7 @@ def load():
     global contentList
     with open(os.getenv("MODULE_INLINE_DJT_JSON")) as f:
         contentList = json.load(f)
+    print("DJT Inline Plugin Loaded!")
 
 def filter(arg):
     return arg == ""

@@ -22,6 +22,7 @@ def validUsername(arg):
 def load():
     global baseImage
     baseImage = Image.open(os.getenv("MODULE_LOVE_BASEIMAGE"))
+    print("Love Inline Plugin Loaded!")
 
 
 def filter(arg):

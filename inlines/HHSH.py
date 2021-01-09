@@ -8,7 +8,7 @@ import requests
 enabled = True
 
 def load():
-    pass
+    print("HHSH Inline Plugin Loaded!")
 
 def filter(arg):
     if arg == "":
@@ -25,11 +25,11 @@ def processResult(res):
     if "trans" in res.keys():
         if res["trans"] == []:
             return ""
-        hhshList = '\n'.join(res["trans"])
+        hhshList = ', '.join(res["trans"])
     elif "inputting" in res.keys():
         if res["inputting"] == []:
             return ""
-        hhshList = '\n'.join(res["inputting"])
+        hhshList = ', '.join(res["inputting"])
     else:
         return ""
     return '*' + res["name"] + ' 的意思：*\n' + hhshList + "\n"
