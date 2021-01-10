@@ -33,6 +33,8 @@ def run_tv(update: Update, context: CallbackContext) -> None:
             if show.first_air_date:
                 returnText = returnText + \
                     "*Date*: {0}\n".format(show.first_air_date)
+            returnText = returnText + \
+                    "[TMDB Link](https://www.themoviedb.org/tv/{0})".format(show.id)
             if show.poster_path:
                 update.message.reply_photo(
                     tmdb_base_url + show.poster_path, caption=returnText, parse_mode='Markdown')
@@ -61,6 +63,8 @@ def run_movie(update: Update, context: CallbackContext) -> None:
             if mv.release_date:
                 returnText = returnText + \
                     "*Date*: {0}\n".format(mv.release_date)
+            returnText = returnText + \
+                    "[TMDB Link](https://www.themoviedb.org/movie/{0})".format(mv.id)
             if mv.poster_path:
                 update.message.reply_photo(
                     tmdb_base_url + mv.poster_path, caption=returnText, parse_mode='Markdown')
@@ -71,7 +75,7 @@ def run_movie(update: Update, context: CallbackContext) -> None:
                 "`Error: Not Found`", parse_mode='Markdown')
     else:
         update.message.reply_text(
-            "*Search for a movie.*\nUsage: `/tvseries {movie name}`.", parse_mode='Markdown')
+            "*Search for a movie.*\nUsage: `/movie {movie name}`.", parse_mode='Markdown')
 
 
 handlers = [CommandHandler("tvseries", run_tv),
