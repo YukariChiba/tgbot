@@ -1,0 +1,9 @@
+python-dotenv
+python-telegram-bot
+Pillow
+matplotlib
+requests
+maidenhead
+beautifulsoup4
+pyzbar
+tmdbv3api
