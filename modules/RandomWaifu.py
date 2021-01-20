@@ -19,6 +19,7 @@ def checkarg(arg):
             return int(arg[0])
     return -1
 
+
 def run(update: Update, context: CallbackContext) -> None:
     seed = checkarg(context.args)
     if seed == -1:
@@ -30,4 +31,4 @@ def run(update: Update, context: CallbackContext) -> None:
             "https://www.thiswaifudoesnotexist.net/example-{}.jpg".format(seed), caption="Random Seed: {}".format(seed), parse_mode='Markdown')
 
 
-handlers = [CommandHandler("twdne", run)]
+handlers = [CommandHandler("twdne", run), CommandHandler("waifu", run)]
