@@ -17,7 +17,8 @@ enabled = True
 
 
 def load():
-    global baseImage
+    global baseImage, baseBreedImage
+    baseBreedImage = Image.open(os.getenv("MODULE_LOVE_BREEDBASEIMAGE"))
     baseImage = Image.open(os.getenv("MODULE_LOVE_BASEIMAGE"))
     print("Love Plugin Loaded!")
 
@@ -50,13 +51,16 @@ def putText(base, text, pos):
     draw.text((pos[0]-w/2, pos[1]), text, font=font, stroke_fill="black", stroke_width=4)
 
 
-def makeLove(user1, user2):
-    global baseImage
+def makeLove(user1, user2, imageType):
+    global baseImage, baseBreedImage
+    if imageType == 1:
+        base = baseBreedImage.copy()
+    else:
+        base = baseImage.copy()
     user1Photo = Image.open(
         os.getenv("USER_PHOTO_STORE") + user1.lower()).resize((200, 200))
     user2Photo = Image.open(
         os.getenv("USER_PHOTO_STORE") + user2.lower()).resize((200, 200))
-    base = baseImage.copy()
     putRoundPhoto(base, user1Photo, (140, 150))
     putRoundPhoto(base, user2Photo, (660, 150))
     draw = ImageDraw.Draw(base)
@@ -64,8 +68,13 @@ def makeLove(user1, user2):
     putText(base, "@" + user2, (760, 380))
     base.save(os.getenv("MODULE_LOVE_TMP"), "WEBP")
 
-
 def love(update: Update, context: CallbackContext) -> None:
+    gen(update, context, 0)
+
+def breed(update: Update, context: CallbackContext) -> None:
+    gen(update, context, 1)
+
+def gen(update: Update, context: CallbackContext, imageType: int) -> None:
     if not validArg(context.args):
         update.message.reply_text(
             "*跟某人/让两人贴贴.*\nUsage: `/love {@someone} [@anotherone]`.\n_Alias:_ `/tie`", parse_mode='Markdown')
@@ -89,9 +98,9 @@ def love(update: Update, context: CallbackContext) -> None:
             if user2 == None or user1 == None:
                 update.message.reply_text("坏掉了，可能是没照片。")
                 return
-        makeLove(user1id, user2id)
+        makeLove(user1id, user2id, imageType)
         update.message.reply_sticker(
             open(os.getenv("MODULE_LOVE_TMP"), 'rb'))
 
 
-handlers = [CommandHandler("love", love), CommandHandler("tie", love)]
+handlers = [CommandHandler("love", love), CommandHandler("tie", love), CommandHandler("breed", breed)]
