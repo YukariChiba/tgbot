@@ -5,6 +5,7 @@ from PIL import Image
 from utils.mapRender import getImageCluster
 import maidenhead as mh
 import os
+import emoji
 
 enabled = True
 
@@ -23,8 +24,8 @@ def checkarg(arg):
 
 def run(update: Update, context: CallbackContext) -> None:
     if len(context.args) != 1:
-        update.message.reply_text(
-            "*Check the location of a maidenhead code.*\nUsage: `/maidenhead {CODE}`.", parse_mode='Markdown')
+        update.message.reply_text(emoji.emojize(
+            ":globe_with_meridians: *Check the location of a maidenhead code.*\nUsage: `/maidenhead {CODE}`."), parse_mode='Markdown')
     else:
         if not checkarg(context.args[0]):
             update.message.reply_text(

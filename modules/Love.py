@@ -8,6 +8,7 @@ from datetime import timedelta, datetime
 from utils.getProfilePhoto import getUserProfilePhoto
 from PIL import Image, ImageDraw, ImageFont
 import re
+import emoji
 
 username_pattern = re.compile("[A-Za-z0-9_]+")
 
@@ -77,7 +78,7 @@ def breed(update: Update, context: CallbackContext) -> None:
 def gen(update: Update, context: CallbackContext, imageType: int) -> None:
     if not validArg(context.args):
         update.message.reply_text(
-            "*跟某人/让两人贴贴.*\nUsage: `/love {@someone} [@anotherone]`.\n_Alias:_ `/tie`", parse_mode='Markdown')
+            emoji.emojize(":heart_with_arrow: *跟某人/让两人贴贴.*\nUsage: `/love {@someone} [@anotherone]`.\n_Alias:_ `/tie`"), parse_mode='Markdown')
     else:
         context.bot.sendChatAction(
             chat_id=update.message.chat_id, action=ChatAction.UPLOAD_PHOTO)
