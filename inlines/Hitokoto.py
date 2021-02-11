@@ -15,7 +15,7 @@ def filter(arg):
     return arg == ""
 
 def getYiYan():
-    r = requests.get('https://v1.hitokoto.cn/?c=a')
+    r = requests.get('https://v1.hitokoto.cn')
     j = r.json()
     return {"md": j["hitokoto"] + "\n\t_--" + j["from"] + "_", "desc": j["hitokoto"]}
 
