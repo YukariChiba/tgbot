@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import os
 import modules as bot_modules
 import schedules as bot_schedules
+from utils.init import init
 from telegram.ext import Updater
 
 load_dotenv()
@@ -24,4 +25,5 @@ def main():
     updater.idle()
 
 if __name__ == "__main__":
+    init()
     main()
