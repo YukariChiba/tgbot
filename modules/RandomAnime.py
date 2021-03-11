@@ -24,6 +24,11 @@ def checkarg(arg):
     if len(arg) == 1 and arg[0].isnumeric():
         if int(arg[0]) > 999 and int(arg[0]) < 50000:
             return (int(arg[0]), 1.0)
+        else:
+            if int(arg[0]) > 50000:
+                return (int(arg[0]) % 50000, 1.0)
+            else:
+                return (int(arg[0]) + 10000, 1.0)
     if len(arg) == 2 and arg[0].isnumeric() and isfloat(arg[1]):
         cr = round(float(arg[1]), 1)
         if int(arg[0]) > 999 and int(arg[0]) < 50000 and cr >= 0.3 and cr <= 2.0:
