@@ -26,7 +26,9 @@ def getNetStatus():
             ifname = itf
             if itf in netmap.keys():
                 ifname = netmap[itf]
-            status = ":check_mark:"
+            status = ":question:"
+            if j[itf]["status"] == "up":
+                status = ":check_mark:"
             if j[itf]["status"] == "down":
                 status = ":cross_mark:"
             t = t + "`{0}`: {1}\n".format(ifname, status)

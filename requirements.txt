@@ -8,3 +8,4 @@ beautifulsoup4
 pyzbar
 tmdbv3api
 emoji
+cairosvg
