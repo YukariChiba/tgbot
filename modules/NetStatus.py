@@ -6,7 +6,7 @@ import os
 import emoji
 import json
 
-enabled = True
+enabled = False
 
 netmap = {}
 

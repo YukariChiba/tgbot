@@ -9,3 +9,4 @@ pyzbar
 tmdbv3api
 emoji
 cairosvg
+googletrans==3.1.0a0
