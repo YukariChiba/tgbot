@@ -15,11 +15,14 @@ def run(update: Update, context: CallbackContext) -> None:
     query = update.inline_query
     results = [
     ]
+    cache_time = int(os.getenv("MODULE_INLINE_CACHETIME"))
     for plugin in inline_plugins.__all__:
         if plugin.enabled and plugin.filter(query.query):
             returnMessage = plugin.run(query, context)
             if returnMessage != None:
+                if hasattr(plugin, 'NOCACHE'):
+                    cache_time = 0
                 results.append(returnMessage)
-    update.inline_query.answer(results, cache_time=int(os.getenv("MODULE_INLINE_CACHETIME")), is_personal=True)
+    update.inline_query.answer(results, cache_time=cache_time, is_personal=True)
 
 handlers = [InlineQueryHandler(run)]
