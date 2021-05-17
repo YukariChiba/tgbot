@@ -20,4 +20,4 @@ def run(update: Update, context: CallbackContext) -> None:
             "https://thispersondoesnotexist.com/image?rnd={}".format(str(random.randint(0, 31415926))))
 
 
-handlers = [CommandHandler("person", run)]
+handlers = [CommandHandler("person", run, run_async=True)]

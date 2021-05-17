@@ -55,4 +55,4 @@ def run(update: Update, context: CallbackContext) -> None:
                 open(str(os.getenv("MODULE_MAIDENHEAD_TMP") + context.args[0].upper() + ".png"), "rb"), caption=returnText, parse_mode='Markdown')
 
 
-handlers = [CommandHandler("maidenhead", run)]
+handlers = [CommandHandler("maidenhead", run, run_async=True)]

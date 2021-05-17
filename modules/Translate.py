@@ -42,4 +42,5 @@ def run(update: Update, context: CallbackContext) -> None:
             "*Translate the replied message.*\nUsage: `/trans [lang_code]`.", parse_mode='Markdown')
 
 
-handlers = [CommandHandler("trans", run), CommandHandler("translate", run)]
+handlers = [CommandHandler("trans", run, run_async=True), CommandHandler(
+    "translate", run, run_async=True)]

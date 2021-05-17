@@ -31,4 +31,5 @@ def run(update: Update, context: CallbackContext) -> None:
             "https://www.thiswaifudoesnotexist.net/example-{}.jpg".format(seed), caption="Random Seed: {}".format(seed), parse_mode='Markdown')
 
 
-handlers = [CommandHandler("twdne", run), CommandHandler("waifu", run)]
+handlers = [CommandHandler("twdne", run, run_async=True),
+            CommandHandler("waifu", run, run_async=True)]

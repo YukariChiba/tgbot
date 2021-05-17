@@ -16,4 +16,4 @@ def run(update: Update, context: CallbackContext) -> None:
     update.message.reply_text("咩～")
 
 
-handlers = [CommandHandler("mie", run)]
+handlers = [CommandHandler("mie", run, run_async=True)]

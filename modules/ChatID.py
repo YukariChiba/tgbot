@@ -13,7 +13,8 @@ def load():
 
 
 def run(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text("*Chat ID:* " + str(update.message.chat.id) ,parse_mode='Markdown')
+    update.message.reply_text(
+        "*Chat ID:* " + str(update.message.chat.id), parse_mode='Markdown')
 
 
-handlers = [CommandHandler("chatid", run)]
+handlers = [CommandHandler("chatid", run, run_async=True)]

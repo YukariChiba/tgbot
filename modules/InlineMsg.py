@@ -5,11 +5,13 @@ import os
 
 enabled = True
 
+
 def load():
     for plugin in inline_plugins.__all__:
         if plugin.enabled:
             plugin.load()
     print("Inline Plugin Loaded!")
+
 
 def run(update: Update, context: CallbackContext) -> None:
     query = update.inline_query
@@ -23,6 +25,8 @@ def run(update: Update, context: CallbackContext) -> None:
                 if hasattr(plugin, 'NOCACHE'):
                     cache_time = 0
                 results.append(returnMessage)
-    update.inline_query.answer(results, cache_time=cache_time, is_personal=True)
+    update.inline_query.answer(
+        results, cache_time=cache_time, is_personal=True)
 
-handlers = [InlineQueryHandler(run)]
+
+handlers = [InlineQueryHandler(run, run_async=True)]

@@ -21,4 +21,4 @@ def run(update: Update, context: CallbackContext) -> None:
             "https://thiscatdoesnotexist.com/?rnd={}".format(str(random.randint(0, 31415926))))
 
 
-handlers = [CommandHandler("cat", run)]
+handlers = [CommandHandler("cat", run, run_async=True)]

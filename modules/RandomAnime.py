@@ -48,4 +48,4 @@ def run(update: Update, context: CallbackContext) -> None:
             "https://thisanimedoesnotexist.ai/results/psi-{}/seed{}.png".format(cr, seed), caption="Random Seed: {}\nCreativity: {}".format(seed, cr), parse_mode='Markdown')
 
 
-handlers = [CommandHandler("tadne", run)]
+handlers = [CommandHandler("tadne", run, run_async=True)]

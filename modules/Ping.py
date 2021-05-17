@@ -80,10 +80,10 @@ def ping6(update: Update, context: CallbackContext) -> None:
             "```\n" + result + "\n```", parse_mode='Markdown', reply_markup=makeReplyMarkup(context.args[0]))
 
 
-handlers = [CommandHandler("ping", ping),
-            CommandHandler("ping4", ping4),
-            CommandHandler("ping6", ping6),
-            CallbackQueryHandler(pingCallback, pattern='/ping *')]
+handlers = [CommandHandler("ping", ping, run_async=True),
+            CommandHandler("ping4", ping4, run_async=True),
+            CommandHandler("ping6", ping6, run_async=True),
+            CallbackQueryHandler(pingCallback, pattern='/ping *', run_async=True)]
 
 if __name__ == "__main__":
     exec_ping("1.1.1.1")

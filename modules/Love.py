@@ -49,7 +49,8 @@ def putText(base, text, pos):
     font = ImageFont.truetype(os.getenv("MODULE_LOVE_TEXTFONT"), 36)
     draw = ImageDraw.Draw(base)
     w, h = draw.textsize(text, font=font)
-    draw.text((pos[0]-w/2, pos[1]), text, font=font, stroke_fill="black", stroke_width=4)
+    draw.text((pos[0]-w/2, pos[1]), text, font=font,
+              stroke_fill="black", stroke_width=4)
 
 
 def makeLove(user1, user2, imageType):
@@ -69,11 +70,14 @@ def makeLove(user1, user2, imageType):
     putText(base, "@" + user2, (760, 380))
     base.save(os.getenv("MODULE_LOVE_TMP"), "WEBP")
 
+
 def love(update: Update, context: CallbackContext) -> None:
     gen(update, context, 0)
 
+
 def breed(update: Update, context: CallbackContext) -> None:
     gen(update, context, 1)
+
 
 def gen(update: Update, context: CallbackContext, imageType: int) -> None:
     if not validArg(context.args):
@@ -104,4 +108,5 @@ def gen(update: Update, context: CallbackContext, imageType: int) -> None:
             open(os.getenv("MODULE_LOVE_TMP"), 'rb'))
 
 
-handlers = [CommandHandler("love", love), CommandHandler("tie", love), CommandHandler("breed", breed)]
+handlers = [CommandHandler("love", love, run_async=True), CommandHandler(
+    "tie", love, run_async=True), CommandHandler("breed", breed, run_async=True)]

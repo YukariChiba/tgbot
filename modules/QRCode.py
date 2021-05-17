@@ -39,4 +39,4 @@ def run(update: Update, context: CallbackContext) -> None:
             "*Scan a qrcode in replied message.*\nUsage: `/qrcode`.", parse_mode='Markdown')
 
 
-handlers = [CommandHandler("qrcode", run)]
+handlers = [CommandHandler("qrcode", run, run_async=True)]

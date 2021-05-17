@@ -21,7 +21,7 @@ def run(update: Update, context: CallbackContext) -> None:
             arg = context.args[0]
             if node_pattern.fullmatch(arg) and len(arg) > 3 and len(arg) < 20:
                 if os.path.isfile(os.getenv("MODULE_PEER_FILES") + arg.lower() + ".md"):
-                    with open(os.getenv("MODULE_PEER_FILES") + arg.lower()  + ".md", 'r') as file:
+                    with open(os.getenv("MODULE_PEER_FILES") + arg.lower() + ".md", 'r') as file:
                         data = file.read()
                     update.message.reply_text(
                         data, parse_mode='Markdown')
@@ -36,4 +36,4 @@ def run(update: Update, context: CallbackContext) -> None:
                 "*Get peer information for AS4242421331 / AS4242421332 in DN42.*\nUsage: `/peer {node}`.\n_Private Chat Only_\n_See DN42 Peerfinder First!_", parse_mode='Markdown')
 
 
-handlers = [CommandHandler("peer", run)]
+handlers = [CommandHandler("peer", run, run_async=True)]

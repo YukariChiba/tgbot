@@ -36,4 +36,4 @@ def run(update: Update, context: CallbackContext) -> None:
             "*Sed to the replied message.*\nUsage: `/sed {from_regex} {to_regex}`.", parse_mode='Markdown')
 
 
-handlers = [CommandHandler("sed", run)]
+handlers = [CommandHandler("sed", run, run_async=True)]

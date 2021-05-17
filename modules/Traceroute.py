@@ -80,10 +80,10 @@ def trace6(update: Update, context: CallbackContext) -> None:
             "```\n" + result + "\n```", parse_mode='Markdown', reply_markup=makeReplyMarkup(context.args[0]))
 
 
-handlers = [CommandHandler("trace", trace),
-            CommandHandler("trace4", trace4),
-            CommandHandler("trace6", trace6),
-            CallbackQueryHandler(traceCallback, pattern='/trace *')]
+handlers = [CommandHandler("trace", trace, run_async=True),
+            CommandHandler("trace4", trace4, run_async=True),
+            CommandHandler("trace6", trace6, run_async=True),
+            CallbackQueryHandler(traceCallback, pattern='/trace *', run_async=True)]
 
 if __name__ == "__main__":
     exec_trace("1.1.1.1")

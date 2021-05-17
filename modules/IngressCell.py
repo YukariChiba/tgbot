@@ -69,4 +69,4 @@ def run(update: Update, context: CallbackContext) -> None:
                     open(str(os.getenv("MODULE_INGRESSCELL_TMP") + j["s2"] + ".png"), "rb"), caption=returnText, parse_mode='Markdown')
 
 
-handlers = [CommandHandler("cell", run)]
+handlers = [CommandHandler("cell", run, run_async=True)]

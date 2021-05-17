@@ -10,11 +10,13 @@ enabled = False
 
 netmap = {}
 
+
 def load():
     global netmap
     with open(os.getenv("MODULE_NETSTATUS_IFLIST")) as f:
         netmap = json.load(f)
     print("Net Status Plugin Loaded!")
+
 
 def getNetStatus():
     global netmap
@@ -36,12 +38,13 @@ def getNetStatus():
     except:
         return None
 
+
 def run(update: Update, context: CallbackContext) -> None:
     ns = getNetStatus()
     if ns:
-        update.message.reply_text(emoji.emojize(ns),parse_mode='Markdown')
+        update.message.reply_text(emoji.emojize(ns), parse_mode='Markdown')
     else:
-        update.message.reply_text("`Network Error.`",parse_mode='Markdown')
+        update.message.reply_text("`Network Error.`", parse_mode='Markdown')
 
 
-handlers = [CommandHandler("netstatus", run)]
+handlers = [CommandHandler("netstatus", run, run_async=True)]
