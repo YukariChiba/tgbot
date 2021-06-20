@@ -8,4 +8,4 @@ ENV LC_ALL en_US.UTF-8
 RUN git clone https://github.com/YukariChiba/tgbot /code
 RUN pip3 install -r /code/requirements.txt
 WORKDIR /code
-CMD ./start.sh
+CMD python3 main.py
