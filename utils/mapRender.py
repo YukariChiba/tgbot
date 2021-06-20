@@ -24,7 +24,7 @@ def num2deg(xtile, ytile, zoom):
 
 
 def getImageCluster(lat_deg, lon_deg, lat_deg2, lon_deg2, zoom):
-    smurl = r"https://tile.openstreetmap.org/{0}/{1}/{2}.png"
+    smurl = r"http://tile.openstreetmap.org/{0}/{1}/{2}.png"
     xmax, ymin = deg2num(lat_deg2, lon_deg2, zoom)
     xmin, ymax = deg2num(lat_deg, lon_deg, zoom)
     xmax = math.ceil(xmax)
