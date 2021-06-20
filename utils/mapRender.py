@@ -24,9 +24,7 @@ def num2deg(xtile, ytile, zoom):
 
 
 def getImageCluster(lat_deg, lon_deg, lat_deg2, lon_deg2, zoom):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}
-    smurl = r"http://a.tile.openstreetmap.org/{0}/{1}/{2}.png"
+    smurl = r"https://a.tile.openstreetmap.org/{0}/{1}/{2}.png"
     xmax, ymin = deg2num(lat_deg2, lon_deg2, zoom)
     xmin, ymax = deg2num(lat_deg, lon_deg, zoom)
     xmax = math.ceil(xmax)
@@ -38,7 +36,7 @@ def getImageCluster(lat_deg, lon_deg, lat_deg2, lon_deg2, zoom):
         for ytile in range(ymin,  ymax+1):
             try:
                 imgurl = smurl.format(zoom, xtile, ytile)
-                imgstr = requests.get(imgurl, headers=headers)
+                imgstr = requests.get(imgurl)
                 tile = Image.open(BytesIO(imgstr.content))
                 Cluster.paste(tile, box=((xtile-xmin)*256,  (ytile-ymin)*255))
             except:
