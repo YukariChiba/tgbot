@@ -6,7 +6,7 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en  
 ENV LC_ALL en_US.UTF-8
 RUN git clone https://github.com/YukariChiba/tgbot /code
-RUN wget https://satori.mycard.moe/ngsw.json -O /code/data/Dress/ngsw.json
+RUN mkdir -p /code/data/Dress && wget https://satori.mycard.moe/ngsw.json -O /code/data/Dress/ngsw.json
 RUN pip3 install -r /code/requirements.txt
 WORKDIR /code
 CMD python3 main.py
