@@ -29,6 +29,8 @@ def run(update: Update, context: CallbackContext) -> None:
             port = int(context.args[1])
         server = MinecraftServer.lookup("{}:{}".format(context.args[0], port))
         try:
+            context.bot.sendChatAction(
+                chat_id=update.message.chat_id, action=ChatAction.TYPING)
             query = server.query()
             status = server.status()
             if status.favicon:
