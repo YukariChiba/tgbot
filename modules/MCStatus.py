@@ -32,8 +32,13 @@ def run(update: Update, context: CallbackContext) -> None:
             update.message.reply_text("Status for `{}`\n*Version*: `{} - {}`\n*MOTD*: `{}`\n*Players*: `{}`".format(
                 "{}:{}".format(context.args[0], port), query.software.brand, query.software.version, query.motd, ", ".join(query.players.names)),  parse_mode='Markdown')
         except:
-            update.message.reply_text(
-                "`Server Error.`", parse_mode='Markdown')
+            try:
+                status = server.status()
+                update.message.reply_text("Status for `{}`\n*Version*: `{}`\n*Players*: `{}/{}`".format(
+                    "{}:{}".format(context.args[0], port), status.version.name, status.players.online, status.players.max),  parse_mode='Markdown')
+            except:
+                update.message.reply_text(
+                    "`Server Error.`", parse_mode='Markdown')
     else:
         update.message.reply_text(
             "*Get the status of Minecraft server.*\nUsage: `/mcstatus <Server> [Port]`.", parse_mode='Markdown')
