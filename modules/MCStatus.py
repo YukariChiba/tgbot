@@ -2,6 +2,7 @@ from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler
 from telegram import Update, ChatAction, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.utils.helpers import escape_markdown
 from mcstatus import MinecraftServer
+import base64
 enabled = True
 
 
@@ -29,13 +30,26 @@ def run(update: Update, context: CallbackContext) -> None:
         server = MinecraftServer.lookup("{}:{}".format(context.args[0], port))
         try:
             query = server.query()
-            update.message.reply_text("Status for `{}`\n*Version*: `{} - {}`\n*MOTD*: `{}`\n*Players*: `{}`".format(
-                "{}:{}".format(context.args[0], port), query.software.brand, query.software.version, query.motd, ", ".join(query.players.names)),  parse_mode='Markdown')
+            status = server.status()
+            if status.favicon:
+                favicon_image = base64.b64decode(
+                    status.favicon.replace("data:image/png;base64,", ""))
+                update.message.reply_photo(favicon_image, caption="Status for `{}`\n*Version*: `{} - {}`\n*MOTD*: `{}`\n*Players*: `{}`".format(
+                    "{}:{}".format(context.args[0], port), query.software.brand, query.software.version, query.motd, ", ".join(query.players.names)),  parse_mode='Markdown')
+            else:
+                update.message.reply_text("Status for `{}`\n*Version*: `{} - {}`\n*MOTD*: `{}`\n*Players*: `{}`".format(
+                    "{}:{}".format(context.args[0], port), query.software.brand, query.software.version, query.motd, ", ".join(query.players.names)),  parse_mode='Markdown')
         except:
             try:
                 status = server.status()
-                update.message.reply_text("Status for `{}`\n*Version*: `{}`\n*Players*: `{}/{}`".format(
-                    "{}:{}".format(context.args[0], port), status.version.name, status.players.online, status.players.max),  parse_mode='Markdown')
+                if status.favicon:
+                    favicon_image = base64.b64decode(
+                        status.favicon.replace("data:image/png;base64,", ""))
+                    update.message.reply_photo(favicon_image, caption="Status for `{}`\n*Version*: `{}`\n*Players*: `{}/{}`".format(
+                        "{}:{}".format(context.args[0], port), status.version.name, status.players.online, status.players.max),  parse_mode='Markdown')
+                else:
+                    update.message.reply_text("Status for `{}`\n*Version*: `{}`\n*Players*: `{}/{}`".format(
+                        "{}:{}".format(context.args[0], port), status.version.name, status.players.online, status.players.max),  parse_mode='Markdown')
             except:
                 update.message.reply_text(
                     "`Server Error.`", parse_mode='Markdown')
