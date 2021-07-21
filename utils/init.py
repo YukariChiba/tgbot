@@ -1,8 +1,7 @@
-import os
+from pathlib import Path
 
 def chk_dir(dir):
-    if not os.path.exists(dir):
-        os.mkdir(dir)
+    Path(dir).mkdir(parents=True, exist_ok=True)
 
 def init():
     chk_dir("cache")
