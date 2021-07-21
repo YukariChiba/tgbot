@@ -9,6 +9,8 @@ enabled = True
 
 
 def load():
+    from utils.init import chk_dir
+    chk_dir(os.getenv("CACHE_DIR") + "tmp/QRCode")
     print("QRCode Plugin Loaded!")
 
 
@@ -16,7 +18,7 @@ def run(update: Update, context: CallbackContext) -> None:
     reply_message = update.message.reply_to_message
     if reply_message and len(context.args) == 0:
         if reply_message.photo or reply_message.sticker:
-            with open(os.getenv("MODULE_QRCODE_TMP"), 'r+b') as f:
+            with open(os.getenv("CACHE_DIR") + "tmp/QRCode/qrcode.png" , 'w+b') as f:
                 if reply_message.photo:
                     reply_message.photo[0].get_file().download(out=f)
                 if reply_message.sticker:

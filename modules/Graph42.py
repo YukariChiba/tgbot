@@ -12,6 +12,8 @@ enabled = True
 
 
 def load():
+    from utils.init import chk_dir
+    chk_dir(os.getenv("CACHE_DIR") + "tmp/Graph42")
     print("Graph42 Plugin Loaded!")
 
 
@@ -24,10 +26,10 @@ def getImage(asn, asn2=None):
                 r = requests.get(u, stream=True)
                 if r.status_code != 200:
                     return None
-                with open(os.getenv("MODULE_GRAPH42_TMPIMG") + ".svg", "wb") as f:
+                with open(os.getenv("CACHE_DIR") + "tmp/Graph42/path.svg", "wb") as f:
                     r.raw.decode_content = True
                     shutil.copyfileobj(r.raw, f)
-                return os.getenv("MODULE_GRAPH42_TMPIMG") + ".svg"
+                return os.getenv("CACHE_DIR") + "tmp/Graph42/path.svg"
             except Exception as e:
                 return None
         else:
@@ -39,10 +41,10 @@ def getImage(asn, asn2=None):
                 r = requests.get(u, stream=True)
                 if r.status_code != 200:
                     return None
-                with open(os.getenv("MODULE_GRAPH42_TMPIMG") + ".svg", "wb") as f:
+                with open(os.getenv("CACHE_DIR") + "tmp/Graph42/path.svg", "wb") as f:
                     r.raw.decode_content = True
                     shutil.copyfileobj(r.raw, f)
-                return os.getenv("MODULE_GRAPH42_TMPIMG") + ".svg"
+                return os.getenv("CACHE_DIR") + "tmp/Graph42/path.svg"
             except Exception as e:
                 return None
         else:
@@ -56,8 +58,8 @@ def run(update: Update, context: CallbackContext) -> None:
         im = getImage(context.args[0])
         if im:
             svg2png(open(im, 'rb').read(), write_to=open(
-                os.getenv("MODULE_GRAPH42_TMPIMG") + ".png", 'wb'))
-            with open(os.getenv("MODULE_GRAPH42_TMPIMG") + ".png", "rb") as f:
+                os.getenv("CACHE_DIR") + "tmp/Graph42/path.png", 'wb'))
+            with open(os.getenv("CACHE_DIR") + "tmp/Graph42/path.png", "rb") as f:
                 update.message.reply_photo(f)
         else:
             update.message.reply_text("`Not found.`", parse_mode='Markdown')
@@ -67,8 +69,8 @@ def run(update: Update, context: CallbackContext) -> None:
         im = getImage(context.args[0], context.args[1])
         if im:
             svg2png(open(im, 'rb').read(), write_to=open(
-                os.getenv("MODULE_GRAPH42_TMPIMG") + ".png", 'wb'))
-            with open(os.getenv("MODULE_GRAPH42_TMPIMG") + ".png", "rb") as f:
+                os.getenv("CACHE_DIR") + "tmp/Graph42/path.png", 'wb'))
+            with open(os.getenv("CACHE_DIR") + "tmp/Graph42/path.png", "rb") as f:
                 update.message.reply_photo(f)
         else:
             update.message.reply_text("`Not found.`", parse_mode='Markdown')

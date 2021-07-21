@@ -18,6 +18,8 @@ enabled = True
 
 
 def load():
+    from utils.init import chk_dir
+    chk_dir(os.getenv("CACHE_DIR") + "tmp/Love")
     global baseImage, baseBreedImage
     baseBreedImage = Image.open(os.getenv("MODULE_LOVE_BREEDBASEIMAGE"))
     baseImage = Image.open(os.getenv("MODULE_LOVE_BASEIMAGE"))
@@ -60,15 +62,15 @@ def makeLove(user1, user2, imageType):
     else:
         base = baseImage.copy()
     user1Photo = Image.open(
-        os.getenv("USER_PHOTO_STORE") + user1.lower()).resize((200, 200))
+        os.getenv("CACHE_DIR") + "user_photo/" + user1.lower()).resize((200, 200))
     user2Photo = Image.open(
-        os.getenv("USER_PHOTO_STORE") + user2.lower()).resize((200, 200))
+        os.getenv("CACHE_DIR") + "user_photo/" + user2.lower()).resize((200, 200))
     putRoundPhoto(base, user1Photo, (140, 150))
     putRoundPhoto(base, user2Photo, (660, 150))
     draw = ImageDraw.Draw(base)
     putText(base, "@" + user1, (240, 380))
     putText(base, "@" + user2, (760, 380))
-    base.save(os.getenv("MODULE_LOVE_TMP"), "WEBP")
+    base.save(os.getenv("CACHE_DIR") + "tmp/Love/love.webp", "WEBP")
 
 
 def love(update: Update, context: CallbackContext) -> None:
@@ -105,7 +107,7 @@ def gen(update: Update, context: CallbackContext, imageType: int) -> None:
                 return
         makeLove(user1id, user2id, imageType)
         update.message.reply_sticker(
-            open(os.getenv("MODULE_LOVE_TMP"), 'rb'))
+            open(os.getenv("CACHE_DIR") + "tmp/Love/love.webp", 'rb'))
 
 
 handlers = [CommandHandler("love", love, run_async=True), CommandHandler(

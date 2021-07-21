@@ -51,16 +51,16 @@ def putText(base, text, pos):
 def makeLove(user1, user2):
     global baseImage
     user1Photo = Image.open(
-        os.getenv("USER_PHOTO_STORE") + user1.lower()).resize((200, 200))
+        os.getenv("CACHE_DIR") + "user_photo/" + user1.lower()).resize((200, 200))
     user2Photo = Image.open(
-        os.getenv("USER_PHOTO_STORE") + user2.lower()).resize((200, 200))
+        os.getenv("CACHE_DIR") + "user_photo/" + user2.lower()).resize((200, 200))
     base = baseImage.copy()
     putRoundPhoto(base, user1Photo, (140, 150))
     putRoundPhoto(base, user2Photo, (660, 150))
     draw = ImageDraw.Draw(base)
     putText(base, "@" + user1, (240, 380))
     putText(base, "@" + user2, (760, 380))
-    base.save(os.getenv("MODULE_LOVE_INLINE_TMP"), "WEBP")
+    base.save(os.getenv("CACHE_DIR") + "tmp/Love/love_inline.webp", "WEBP")
 
 
 def run(querybody, context):
@@ -73,7 +73,7 @@ def run(querybody, context):
     if user2 == None or user1 == None:
         return None
     im = makeLove(user1id, user2id)
-    file_upload = upload(os.getenv("MODULE_LOVE_INLINE_TMP"), context.bot)
+    file_upload = upload(os.getenv("CACHE_DIR") + "tmp/Love/love_inline.webp", context.bot)
     return_val = InlineQueryResultCachedSticker(
         id=uuid4(), sticker_file_id=file_upload)
     return return_val

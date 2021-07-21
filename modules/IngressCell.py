@@ -20,6 +20,8 @@ subarea = [
 
 
 def load():
+    from utils.init import chk_dir
+    chk_dir(os.getenv("CACHE_DIR") + "tmp/IngressCell")
     print("IngressCell Plugin Loaded!")
 
 
@@ -60,13 +62,13 @@ def run(update: Update, context: CallbackContext) -> None:
                     j["geom"]["nw"][1], j["geom"]["ne"][1], j["geom"]["sw"][1], j["geom"]["se"][1])]
                 p2 = [max(j["geom"]["nw"][0], j["geom"]["ne"][0], j["geom"]["sw"][0], j["geom"]["se"][0]), max(
                     j["geom"]["nw"][1], j["geom"]["ne"][1], j["geom"]["sw"][1], j["geom"]["se"][1])]
-                if not os.path.isfile(os.getenv("MODULE_INGRESSCELL_TMP") + j["s2"] + ".png"):
+                if not os.path.isfile(os.getenv("CACHE_DIR") + "tmp/IngressCell/" + j["s2"] + ".png"):
                     imagecluster = getImageCluster(
                         p1[0], p1[1], p2[0], p2[1], 8)
                     imagecluster.save(
-                        os.getenv("MODULE_INGRESSCELL_TMP") + j["s2"] + ".png")
+                        os.getenv("CACHE_DIR") + "tmp/IngressCell/" + j["s2"] + ".png")
                 update.message.reply_photo(
-                    open(str(os.getenv("MODULE_INGRESSCELL_TMP") + j["s2"] + ".png"), "rb"), caption=returnText, parse_mode='Markdown')
+                    open(str(os.getenv("CACHE_DIR") + "tmp/IngressCell/" + j["s2"] + ".png"), "rb"), caption=returnText, parse_mode='Markdown')
 
 
 handlers = [CommandHandler("cell", run, run_async=True)]

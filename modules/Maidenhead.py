@@ -13,6 +13,8 @@ step = [[1, 2, 8], [1/24, 2/24, 13], [1/240, 2/240, 16]]
 
 
 def load():
+    from utils.init import chk_dir
+    chk_dir(os.getenv("CACHE_DIR") + "tmp/Maidenhead")
     print("Maidenhead Plugin Loaded!")
 
 
@@ -46,13 +48,13 @@ def run(update: Update, context: CallbackContext) -> None:
                 chat_id=update.message.chat_id, action=ChatAction.UPLOAD_PHOTO)
             returnText = "*Code*: `{0}`".format(
                 context.args[0].upper())
-            if not os.path.isfile(os.getenv("MODULE_MAIDENHEAD_TMP") + context.args[0].upper() + ".png"):
+            if not os.path.isfile(os.getenv("CACHE_DIR") + "tmp/Maidenhead/" + context.args[0].upper() + ".png"):
                 imagecluster = getImageCluster(
                     loc[0], loc[1], loc[0] + zonestep[0] * 1.1, loc[1] + zonestep[1] * 1.1, zonestep[2])
                 imagecluster.save(
-                    os.getenv("MODULE_MAIDENHEAD_TMP") + context.args[0].upper() + ".png")
+                    os.getenv("CACHE_DIR") + "tmp/Maidenhead/" + context.args[0].upper() + ".png")
             update.message.reply_photo(
-                open(str(os.getenv("MODULE_MAIDENHEAD_TMP") + context.args[0].upper() + ".png"), "rb"), caption=returnText, parse_mode='Markdown')
+                open(str(os.getenv("CACHE_DIR") + "tmp/Maidenhead/" + context.args[0].upper() + ".png"), "rb"), caption=returnText, parse_mode='Markdown')
 
 
 handlers = [CommandHandler("maidenhead", run, run_async=True)]
