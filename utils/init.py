@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 def chk_dir(dir):
     Path(dir).mkdir(parents=True, exist_ok=True)
