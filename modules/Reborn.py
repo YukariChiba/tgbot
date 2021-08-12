@@ -29,7 +29,7 @@ def random_country():
 def random_gender():
     return random.choices(
         population=["男孩子", "女孩子", "雌雄同体"],
-        weights=[0.4999999, 0.4999999, 0.0000002],
+        weights=[0.50707, 0.48292, 0.01001],
         k=1
     )[0]
 
