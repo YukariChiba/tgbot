@@ -37,7 +37,7 @@ def processResult(res):
 def getASN(asn):
     return_value = ""
     r = requests.get(
-        'https://bgp-api.strexp.net/as/AS' + asn + '.json')
+        'https://bgp-data.strexp.net/asn/AS' + asn + '.json')
     if r.status_code == 404:
         return None
     return r.json()
