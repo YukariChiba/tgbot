@@ -18,7 +18,7 @@ def run(update: Update, context: CallbackContext) -> None:
         update.message.reply_text(
             "*Get a senso ji omikuji*\nUsage: `/senso`.", parse_mode='Markdown')
     else:
-        update.message.reply_media_group(["https://raw.githubusercontent.com/fumiama/senso-ji-omikuji/main/{}_1.jpg".format(str(page)),
+        update.message.reply_media_group(["https://raw.githubusercontent.com/fumiama/senso-ji-omikuji/main/{}_0.jpg".format(str(page)),
         "https://raw.githubusercontent.com/fumiama/senso-ji-omikuji/main/{}_1.jpg".format(str(page))])
 
 
