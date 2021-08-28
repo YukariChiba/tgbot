@@ -7,8 +7,6 @@ import json
 
 enabled = True
 
-randint = 0
-
 def load():
     print("FortuneTelling Plugin Loaded!")
 
