@@ -21,14 +21,14 @@ def args_check_ban(args):
 def ban(update: Update, context: CallbackContext) -> None:
     if str(update.message.chat.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
         if args_check_ban(context.args):
-            #try:
-            with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
-                resp = client.ban(context.args[0])
+            try:
+                with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
+                    resp = client.ban(context.args[0])
+                    update.message.reply_text(
+                            "`+" + resp + "+`", parse_mode='Markdown')
+            except:
                 update.message.reply_text(
-                        "`+" + resp + "+`", parse_mode='Markdown')
-            # except:
-            #     update.message.reply_text(
-            #             "`Server Error.`", parse_mode='Markdown')
+                        "`Server Error.`", parse_mode='Markdown')
         else:
             update.message.reply_text(
                 "*Ban specific player from MC server.*\nUsage: `/mcban <Player>`.", parse_mode='Markdown')
