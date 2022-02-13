@@ -12,3 +12,4 @@ cairosvg
 googletrans==3.1.0a0
 dice
 mcstatus
+mcipc
