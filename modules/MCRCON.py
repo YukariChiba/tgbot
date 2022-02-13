@@ -19,7 +19,7 @@ def args_check_ban(args):
 
 
 def ban(update: Update, context: CallbackContext) -> None:
-    if str(update.message.chat.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
+    if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
         if args_check_ban(context.args):
             try:
                 with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
