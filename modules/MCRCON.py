@@ -11,22 +11,8 @@ def load():
     print("MCRCON Plugin Loaded!")
 
 
-def args_check_banlist(args):
-    if len(args) == 0:
-        return True
-    else:
-        return False
-
-
-def args_check_pardon(args):
-    if len(args) == 1:
-        return True
-    else:
-        return False
-
-
-def args_check_ban(args):
-    if len(args) == 1 or len(args) == 2:
+def args_check_num(args, numset):
+    if len(args) in numset:
         return True
     else:
         return False
@@ -34,7 +20,7 @@ def args_check_ban(args):
 
 def kick(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
-        if args_check_ban(context.args):
+        if args_check_num(context.args, [1, 2]):
             try:
                 with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
                     if len(context.args) == 2:
@@ -54,7 +40,7 @@ def kick(update: Update, context: CallbackContext) -> None:
 
 def banip(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
-        if args_check_ban(context.args):
+        if args_check_num(context.args, [1, 2]):
             try:
                 with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
                     if len(context.args) == 2:
@@ -74,7 +60,7 @@ def banip(update: Update, context: CallbackContext) -> None:
 
 def ban(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
-        if args_check_ban(context.args):
+        if args_check_num(context.args, [1, 2]):
             try:
                 with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
                     if len(context.args) == 2:
@@ -94,7 +80,7 @@ def ban(update: Update, context: CallbackContext) -> None:
 
 def pardon(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
-        if args_check_pardon(context.args):
+        if args_check_num(context.args, [1]):
             try:
                 with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
                     resp = client.pardon(context.args[0])
@@ -110,7 +96,7 @@ def pardon(update: Update, context: CallbackContext) -> None:
 
 def banlist(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
-        if args_check_banlist(context.args):
+        if args_check_num(context.args, [0]):
             try:
                 with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
                     resp = client.banlist().replace(".", "\n").replace(" bans:", " bans:\n")
