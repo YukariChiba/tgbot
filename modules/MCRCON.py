@@ -4,6 +4,8 @@ from telegram.utils.helpers import escape_markdown
 from mcipc.rcon.je import Client
 import base64
 import os
+from os import listdir
+from os.path import isfile, join
 enabled = True
 
 
@@ -29,7 +31,7 @@ def custom(update: Update, context: CallbackContext) -> None:
                 cmddata = cmd.split("\n", 1)
                 with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
                     resp = client.run(
-                        cmddata[0], cmddata[1])
+                        cmddata[0].strip(), cmddata[1].strip())
                     update.message.reply_text(
                         "`" + resp + "`", parse_mode='Markdown')
             except Exception as e:
@@ -46,7 +48,7 @@ def customlist(update: Update, context: CallbackContext) -> None:
             presetfiles = [f for f in listdir(os.getenv("MODULE_MCRCON_PRESET")) if isfile(
                 join(os.getenv("MODULE_MCRCON_PRESET"), f))]
             update.message.reply_text(
-                "*Preset list*:\n\n" + "\n".join(peerfiles), parse_mode='Markdown')
+                "*Preset list*:\n\n" + "\n".join(presetfiles), parse_mode='Markdown')
         else:
             update.message.reply_text(
                 "*List custom command preset.*\nUsage: `/mcclist`.", parse_mode='Markdown')
