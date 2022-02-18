@@ -6,6 +6,7 @@ import base64
 import os
 from os import listdir
 from os.path import isfile, join
+import time
 enabled = True
 
 
@@ -20,6 +21,29 @@ def args_check_num(args, numset):
         return True
     else:
         return False
+
+
+def tick(update: Update, context: CallbackContext) -> None:
+    if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
+        if args_check_num(context.args, [0, 1]):
+            try:
+                with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
+                    resp = client.debug(True)
+                    t = 10
+                    if len(context.args) == 1:
+                        tt = int(context.args[0])
+                        if tt > 3 and tt < 20:
+                            t = tt
+                    time.sleep(t)
+                    resp = resp + "\n" + client.debug(False)
+                    update.message.reply_text(
+                        "`" + resp + "`", parse_mode='Markdown')
+            except Exception as e:
+                update.message.reply_text(
+                    "`Server Error: {}`".format(type(e).__name__), parse_mode='Markdown')
+        else:
+            update.message.reply_text(
+                "*Execute a profile to query tps.*\nUsage: `/mctick [time]`.", parse_mode='Markdown')
 
 
 def custom(update: Update, context: CallbackContext) -> None:
@@ -52,6 +76,7 @@ def customlist(update: Update, context: CallbackContext) -> None:
         else:
             update.message.reply_text(
                 "*List custom command preset.*\nUsage: `/mcclist`.", parse_mode='Markdown')
+
 
 def kick(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
@@ -145,7 +170,8 @@ def banlist(update: Update, context: CallbackContext) -> None:
                 "*Get the banlist of MC server.*\nUsage: `/mcbanlist`.", parse_mode='Markdown')
 
 
-handlers = [CommandHandler("mcban", ban, run_async=True),
+handlers = [CommandHandler("mctick", tick, run_async=True),
+            CommandHandler("mcban", ban, run_async=True),
             CommandHandler("mcc", custom, run_async=True),
             CommandHandler("mcclist", customlist, run_async=True),
             CommandHandler("mcbanip", banip, run_async=True),
