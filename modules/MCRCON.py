@@ -8,6 +8,8 @@ enabled = True
 
 
 def load():
+    from utils.init import chk_dir
+    chk_dir(os.getenv("MODULE_MCRCON_PRESET"))
     print("MCRCON Plugin Loaded!")
 
 
@@ -17,6 +19,37 @@ def args_check_num(args, numset):
     else:
         return False
 
+
+def custom(update: Update, context: CallbackContext) -> None:
+    if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
+        if args_check_num(context.args, [1]):
+            try:
+                with open(os.getenv("MODULE_MCRCON_PRESET") + context.args[0]) as pf:
+                    cmd = pf.read()
+                cmddata = cmd.split("\n", 1)
+                with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
+                    resp = client.run(
+                        cmddata[0], cmddata[1])
+                    update.message.reply_text(
+                        "`" + resp + "`", parse_mode='Markdown')
+            except Exception as e:
+                update.message.reply_text(
+                    "`Server Error: {}`".format(type(e).__name__), parse_mode='Markdown')
+        else:
+            update.message.reply_text(
+                "*Execute custom command preset.*\nUsage: `/mcc <CommandPreset>`.", parse_mode='Markdown')
+
+
+def customlist(update: Update, context: CallbackContext) -> None:
+    if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
+        if args_check_num(context.args, [0]):
+            presetfiles = [f for f in listdir(os.getenv("MODULE_MCRCON_PRESET")) if isfile(
+                join(os.getenv("MODULE_MCRCON_PRESET"), f))]
+            update.message.reply_text(
+                "*Preset list*:\n\n" + "\n".join(peerfiles), parse_mode='Markdown')
+        else:
+            update.message.reply_text(
+                "*List custom command preset.*\nUsage: `/mcclist`.", parse_mode='Markdown')
 
 def kick(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
@@ -111,7 +144,9 @@ def banlist(update: Update, context: CallbackContext) -> None:
 
 
 handlers = [CommandHandler("mcban", ban, run_async=True),
-            CommandHandler("mcbanip", ban, run_async=True),
+            CommandHandler("mcc", custom, run_async=True),
+            CommandHandler("mcclist", customlist, run_async=True),
+            CommandHandler("mcbanip", banip, run_async=True),
             CommandHandler("mcpardon", pardon, run_async=True),
             CommandHandler("mckick", kick, run_async=True),
             CommandHandler("mcbanlist", banlist, run_async=True)]
