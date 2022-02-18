@@ -28,14 +28,16 @@ def tick(update: Update, context: CallbackContext) -> None:
         if args_check_num(context.args, [0, 1]):
             try:
                 with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
-                    resp = client.debug(True)
+                    resp = client.debug("start")
+                    update.message.reply_text(
+                        "`" + resp + "`", parse_mode='Markdown')
                     t = 10
                     if len(context.args) == 1:
                         tt = int(context.args[0])
                         if tt > 3 and tt < 20:
                             t = tt
                     time.sleep(t)
-                    resp = resp + "\n" + client.debug(False)
+                    resp = client.debug("stop")
                     update.message.reply_text(
                         "`" + resp + "`", parse_mode='Markdown')
             except Exception as e:
