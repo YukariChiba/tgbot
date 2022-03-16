@@ -40,6 +40,7 @@ def pingCallback(update: Update, context: CallbackContext) -> None:
         chat_id=query.message.chat_id, action=ChatAction.TYPING)
     ip = query.data.replace("/ping ", "")
     result = exec_ping(ip)
+    query.edit_message_reply_markup(reply_markup=None)
     query.message.reply_text("```\n" + result + "\n```",
                              parse_mode='Markdown')
 
