@@ -60,7 +60,9 @@ def voteCallback(update: Update, context: CallbackContext) -> None:
 
 def run(update: Update, context: CallbackContext) -> None:
     if len(context.args) >= 1:
-        if len(context.args) == 1 and re.match(r"[a-zA-Z0-9\-]", context.args[0]):
+        if len(context.args) == 1 and re.match(r"@?[a-zA-Z0-9\-]", context.args[0]):
+            if context.args[0][0] == "@":
+                context.args[0] = context.args[0][1:]
             if context.args[0] in dresslist.keys():
                 dress = random.choice(dresslist[context.args[0]])
                 update.message.reply_photo(
