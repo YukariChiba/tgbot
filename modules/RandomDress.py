@@ -15,18 +15,11 @@ dresslist_images = []
 
 def load():
     global dresslist
-    global dresslist_raw
-    global dresslist_images_weight
+    global dresslist_images
     with open(os.getenv("MODULE_DRESS_DATA")) as f:
-        raw = json.load(f)
-        dresslist_raw = raw["hashTable"]
-    dresslist_raw = list(dresslist_raw)
-    for dress_item in dresslist_raw:
-        if dress_item.startswith("/Dress/"):
-            dresslist_images.append(dress_item)
-            tmp = dress_item.split("/")
-            if len(tmp) >= 3:
-                dresslist.setdefault(tmp[2], []).append(dress_item)
+        dresslist = json.load(f)
+    for username in dresslist.keys():
+        dresslist_images = dresslist_images + dresslist[username]
     if not os.path.exists(os.getenv("MODULE_DRESS_VOTE_DATA")):
         with open(os.getenv("MODULE_DRESS_VOTE_DATA"), "w") as f:
             json.dump({}, f)
@@ -71,7 +64,7 @@ def run(update: Update, context: CallbackContext) -> None:
             if context.args[0] in dresslist.keys():
                 dress = random.choice(dresslist[context.args[0]])
                 update.message.reply_photo(
-                    "https://satori.mycard.moe" + dress, caption="`{}`".format(dress), parse_mode='Markdown', reply_markup=makeReplyMarkup(dress))
+                    "https://satori.mycard.moe" + dress, caption="`{}`".format(dress), parse_mode='Markdown')
             else:
                 update.message.reply_text(
                     "`Error: Not found.`", parse_mode='Markdown')
@@ -82,8 +75,19 @@ def run(update: Update, context: CallbackContext) -> None:
         user = random.choice(list(dresslist.keys()))
         dress = random.choice(dresslist[user])
         update.message.reply_photo(
-            "https://satori.mycard.moe" + dress, caption="`{}`".format(dress), parse_mode='Markdown', reply_markup=makeReplyMarkup(dress))
+            "https://satori.mycard.moe" + dress, caption="`{}`".format(dress), parse_mode='Markdown')
 
 
 handlers = [CommandHandler("dress", run, run_async=True),
             CallbackQueryHandler(voteCallback, pattern=r'\/dress (upvote|downvote) (\S)+', run_async=True)]
+
+
+def test():
+    from dotenv import load_dotenv
+    load_dotenv()
+    load()
+    print(random.choice(dresslist[random.choice(list(dresslist.keys()))]))
+
+
+if __name__ == "__main__":
+    test()
