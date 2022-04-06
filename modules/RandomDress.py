@@ -12,14 +12,28 @@ enabled = True
 dresslist = {}
 dresslist_images = []
 
+dresslist_lite = {}
+dresslist_lite_images = []
+
+
+def formatMsg(photo):
+    msg = "Location: `{}`".format(photo)
+    return msg
+
 
 def load():
     global dresslist
     global dresslist_images
+    global dresslist_lite
+    global dresslist_lite_images
     with open(os.getenv("MODULE_DRESS_DATA")) as f:
         dresslist = json.load(f)
+    with open(os.getenv("MODULE_DRESS_LITE_DATA")) as f:
+        dresslist_lite = json.load(f)
     for username in dresslist.keys():
         dresslist_images = dresslist_images + dresslist[username]
+    for username in dresslist_lite.keys():
+        dresslist_lite_images = dresslist_lite_images + dresslist[username]
     if not os.path.exists(os.getenv("MODULE_DRESS_VOTE_DATA")):
         with open(os.getenv("MODULE_DRESS_VOTE_DATA"), "w") as f:
             json.dump({}, f)
@@ -54,7 +68,7 @@ def voteCallback(update: Update, context: CallbackContext) -> None:
         raw[info[2]][info[1]].append(query.from_user.id)
     with open(os.getenv("MODULE_DRESS_VOTE_DATA"), "w") as f:
         json.dump(raw, f)
-    #query.edit_message_reply_markup(reply_markup=None)
+    # query.edit_message_reply_markup(reply_markup=None)
     query.answer(text="感谢您的评价。")
 
 
@@ -66,7 +80,7 @@ def run(update: Update, context: CallbackContext) -> None:
             if context.args[0] in dresslist.keys():
                 dress = random.choice(dresslist[context.args[0]])
                 update.message.reply_photo(
-                    "https://github.com/komeiji-satori/Dress/blob/master" + dress + "?raw=true", caption="`{}`".format(dress), parse_mode='Markdown')
+                    "https://github.com/komeiji-satori/Dress/blob/master" + dress + "?raw=true", caption=formatMsg(dress), parse_mode='Markdown')
             else:
                 update.message.reply_text(
                     "`Error: Not found.`", parse_mode='Markdown')
@@ -77,10 +91,33 @@ def run(update: Update, context: CallbackContext) -> None:
         user = random.choice(list(dresslist.keys()))
         dress = random.choice(dresslist[user])
         update.message.reply_photo(
-            "https://github.com/komeiji-satori/Dress/blob/master" + dress + "?raw=true", caption="`{}`".format(dress), parse_mode='Markdown')
+            "https://github.com/komeiji-satori/Dress/blob/master" + dress + "?raw=true", caption=formatMsg(dress), parse_mode='Markdown')
+
+
+def runlite(update: Update, context: CallbackContext) -> None:
+    if len(context.args) >= 1:
+        if len(context.args) == 1 and re.match(r"@?[a-zA-Z0-9\-]", context.args[0]):
+            if context.args[0][0] == "@":
+                context.args[0] = context.args[0][1:]
+            if context.args[0] in dresslist_lite.keys():
+                dress = random.choice(dresslist[context.args[0]])
+                update.message.reply_photo(
+                    "https://github.com/KiritakeKumi/Dress-Lite/blob/master" + dress + "?raw=true", caption=formatMsg(dress), parse_mode='Markdown')
+            else:
+                update.message.reply_text(
+                    "`Error: Not found.`", parse_mode='Markdown')
+        else:
+            update.message.reply_text(
+                emoji.emojize(":dress: *Get a random dress photo from* `KiritakeKumi/Dress-Lite`.\nUsage: `/dresslite [User ID]`."), parse_mode='Markdown')
+    else:
+        user = random.choice(list(dresslist_lite.keys()))
+        dress = random.choice(dresslist_lite[user])
+        update.message.reply_photo(
+            "https://github.com/KiritakeKumi/Dress-Lite/blob/master" + dress + "?raw=true", caption=formatMsg(dress), parse_mode='Markdown')
 
 
 handlers = [CommandHandler("dress", run, run_async=True),
+            CommandHandler("dresslite", runlite, run_async=True),
             CallbackQueryHandler(voteCallback, pattern=r'\/dress (upvote|downvote) (\S)+', run_async=True)]
 
 
