@@ -64,7 +64,7 @@ def run(update: Update, context: CallbackContext) -> None:
             if context.args[0] in dresslist.keys():
                 dress = random.choice(dresslist[context.args[0]])
                 update.message.reply_photo(
-                    "https://satori.mycard.moe" + dress, caption="`{}`".format(dress), parse_mode='Markdown')
+                    "https://github.com/komeiji-satori/Dress/blob/master" + dress + "?raw=true", caption="`{}`".format(dress), parse_mode='Markdown')
             else:
                 update.message.reply_text(
                     "`Error: Not found.`", parse_mode='Markdown')
@@ -75,7 +75,7 @@ def run(update: Update, context: CallbackContext) -> None:
         user = random.choice(list(dresslist.keys()))
         dress = random.choice(dresslist[user])
         update.message.reply_photo(
-            "https://satori.mycard.moe" + dress, caption="`{}`".format(dress), parse_mode='Markdown')
+            "https://github.com/komeiji-satori/Dress/blob/master" + dress + "?raw=true", caption="`{}`".format(dress), parse_mode='Markdown')
 
 
 handlers = [CommandHandler("dress", run, run_async=True),
