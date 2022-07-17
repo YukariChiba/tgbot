@@ -1,2 +1,2 @@
 # tgbot
-@CharlesYangBot in Telegram
+@YukariChibaBot in Telegram
