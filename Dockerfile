@@ -1,6 +1,6 @@
 FROM debian:buster
 RUN apt-get update
-RUN apt-get install -y python3 python3-pip libzbar0 libidn2-dev locales traceroute git libcairo2-dev wget
+RUN apt-get install -y python3 python3-pip libzbar0 libidn2-dev locales traceroute git libcairo2-dev wget libjpeg
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 ENV LANG en_US.UTF-8  
 ENV LANGUAGE en_US:en  
