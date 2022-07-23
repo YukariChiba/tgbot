@@ -1,7 +1,7 @@
 from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler
 from telegram import Update, ChatAction, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.utils.helpers import escape_markdown
-from mcipc.rcon.je import Client
+import mcipc.rcon as rcon
 import base64
 import os
 from os import listdir
@@ -27,7 +27,7 @@ def tick(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
         if args_check_num(context.args, [0, 1]):
             try:
-                with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
+                with rcon.je.Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
                     resp = client.debug("start")
                     update.message.reply_text(
                         "`" + resp + "`", parse_mode='Markdown')
@@ -55,7 +55,7 @@ def custom(update: Update, context: CallbackContext) -> None:
                 with open(os.getenv("MODULE_MCRCON_PRESET") + context.args[0]) as pf:
                     cmd = pf.read()
                 cmddata = cmd.split("\n", 1)
-                with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
+                with rcon.je.Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
                     resp = client.run(
                         cmddata[0].strip(), cmddata[1].strip())
                     update.message.reply_text(
@@ -84,7 +84,7 @@ def kick(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
         if args_check_num(context.args, [1, 2]):
             try:
-                with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
+                with rcon.je.Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
                     if len(context.args) == 2:
                         resp = client.kick(
                             context.args[0], context.args[1])
@@ -104,7 +104,7 @@ def banip(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
         if args_check_num(context.args, [1, 2]):
             try:
-                with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
+                with rcon.je.Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
                     if len(context.args) == 2:
                         resp = client.banip(
                             context.args[0], context.args[1])
@@ -124,7 +124,7 @@ def ban(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
         if args_check_num(context.args, [1, 2]):
             try:
-                with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
+                with rcon.je.Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
                     if len(context.args) == 2:
                         resp = client.ban(
                             context.args[0], context.args[1])
@@ -144,7 +144,7 @@ def pardon(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
         if args_check_num(context.args, [1]):
             try:
-                with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
+                with rcon.je.Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
                     resp = client.pardon(context.args[0])
                     update.message.reply_text(
                         "`" + resp + "`", parse_mode='Markdown')
@@ -160,7 +160,7 @@ def banlist(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) == str(os.getenv("MODULE_MCRCON_ADMIN")):
         if args_check_num(context.args, [0]):
             try:
-                with Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
+                with rcon.je.Client(os.getenv("MODULE_MCRCON_SERVER"), 25575, passwd=os.getenv("MODULE_MCRCON_PASS")) as client:
                     resp = client.banlist().replace(".", "\n").replace(" bans:", " bans:\n")
                     update.message.reply_text(
                         "`" + resp + "`", parse_mode='Markdown')
