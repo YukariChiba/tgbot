@@ -133,3 +133,6 @@ cache/
 data/traceroute
 data/Peers/*.md
 data/Dress/*.json
+
+# Test Code
+test_codes/
