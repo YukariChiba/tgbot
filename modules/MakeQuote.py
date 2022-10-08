@@ -14,9 +14,11 @@ enabled = True
 
 CENTER_POS = 820
 
+TEXT_SIZE_EXLARGE = 56
+TEXT_SIZE_LARGE = 48
 TEXT_SIZE = 42
-USER_SIZE = 32
-CODE_SIZE = 24
+USER_SIZE = 28
+CODE_SIZE = 20
 
 
 def load():
@@ -41,24 +43,35 @@ def putText(base, text, pos, font_size, font_type, color=None):
 
 
 def putTexts(base, text_msg, text_user, text_userid):
+    currentTextSize = TEXT_SIZE
     draw = Pilmoji(base)
     lines = 0
-    textFont = ImageFont.truetype(os.getenv("MODULE_MAKEQUOTE_TEXTFONT"), TEXT_SIZE)
+    textFont = ImageFont.truetype(os.getenv("MODULE_MAKEQUOTE_TEXTFONT"), currentTextSize)
     texts = fitText(draw, textFont, text_msg, 640, 500)
     len_texts = len(texts.split('\n'))
 
-    remaining_start = 270 - (TEXT_SIZE * len_texts + 4) // 2
+    # Scaling, need recalc
+    if(len_texts < 4):
+        if(len_texts < 2):
+            currentTextSize = TEXT_SIZE_EXLARGE
+        else:
+            currentTextSize = TEXT_SIZE_LARGE
+        textFont = ImageFont.truetype(os.getenv("MODULE_MAKEQUOTE_TEXTFONT"), currentTextSize)
+        texts = fitText(draw, textFont, text_msg, 640, 500)
+        len_texts = len(texts.split('\n'))
+
+    remaining_start = 270 - (currentTextSize * len_texts + 4) // 2
     cnt = 0
     for text in texts.split('\n'):
         remaining_start = remaining_start + putText(
             draw,
             text,
             (CENTER_POS, remaining_start),
-            TEXT_SIZE,
+            currentTextSize,
             os.getenv("MODULE_MAKEQUOTE_TEXTFONT")
         ) + 4
 
-    remaining_start = remaining_start + TEXT_SIZE // 2
+    remaining_start = remaining_start + currentTextSize // 2
 
     remaining_start = remaining_start + putText(
         draw,
@@ -107,6 +120,9 @@ def makeQuote(update: Update, context: CallbackContext) -> None:
         else:
             username = reply_to.from_user.username
             username_text = getUserName(reply_to.from_user)
+        if username == None:
+            update.message.reply_text("No username found.")
+            return
         context.bot.sendChatAction(
             chat_id=update.message.chat_id, action=ChatAction.UPLOAD_PHOTO)
         user = getUserProfilePhoto(username, context)
