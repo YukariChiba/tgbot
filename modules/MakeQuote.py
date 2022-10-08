@@ -9,6 +9,7 @@ from utils.wrapTextImage import fitText
 from utils.userInfo import getUserName
 import emoji
 from pilmoji import Pilmoji
+import uuid
 
 enabled = True
 
@@ -95,6 +96,7 @@ def putTexts(base, text_msg, text_user, text_userid):
 
 def makeQuoteGen(user, usertext, text):
     global baseImage, baseFont, userFont
+    uuid_file = uuid.uuid4()
     base = baseImage.copy()
     userPhoto = Image.open(
         os.getenv("CACHE_DIR") + "user_photo/" + user.lower()).resize((630, 630))
@@ -102,7 +104,9 @@ def makeQuoteGen(user, usertext, text):
     userPhotoFull.paste(userPhoto, (-40, 0))
     base = Image.alpha_composite(userPhotoFull, base)
     putTexts(base, text, "— " + usertext, "@" + user)
-    base.save(os.getenv("CACHE_DIR") + "tmp/MakeQuote/generated.png", "PNG")
+    tmpfile = os.getenv("CACHE_DIR") + f"tmp/MakeQuote/{uuid_file}.png"
+    base.save(tmpfile, "PNG")
+    return tmpfile
 
 
 def makeQuote(update: Update, context: CallbackContext) -> None:
@@ -130,9 +134,9 @@ def makeQuote(update: Update, context: CallbackContext) -> None:
             update.message.reply_text("No profile photo found.")
             return
         try:
-            makeQuoteGen(username, username_text, reply_to.text)
-            update.message.reply_photo(
-                open(os.getenv("CACHE_DIR") + "tmp/MakeQuote/generated.png", 'rb'))
+            imgfile = makeQuoteGen(username, username_text, reply_to.text)
+            update.message.reply_photo(open(imgfile, 'rb'))
+            os.remove(imgfile)
         except Exception as e:
             print(e)
             update.message.reply_text("Message too long.")
