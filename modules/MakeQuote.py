@@ -89,7 +89,7 @@ def makeQuoteGen(user, usertext, text):
     userPhotoFull.paste(userPhoto, (-40, 0))
     base = Image.alpha_composite(userPhotoFull, base)
     putTexts(base, text, "— " + usertext, "@" + user)
-    base.save(os.getenv("CACHE_DIR") + "tmp/MakeQuote/generated.webp", "WEBP")
+    base.save(os.getenv("CACHE_DIR") + "tmp/MakeQuote/generated.png", "PNG")
 
 
 def makeQuote(update: Update, context: CallbackContext) -> None:
@@ -115,8 +115,8 @@ def makeQuote(update: Update, context: CallbackContext) -> None:
             return
         try:
             makeQuoteGen(username, username_text, reply_to.text)
-            update.message.reply_sticker(
-                open(os.getenv("CACHE_DIR") + "tmp/MakeQuote/generated.webp", 'rb'))
+            update.message.reply_photo(
+                open(os.getenv("CACHE_DIR") + "tmp/MakeQuote/generated.png", 'rb'))
         except Exception as e:
             print(e)
             update.message.reply_text("Message too long.")
