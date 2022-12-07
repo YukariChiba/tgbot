@@ -37,7 +37,7 @@ def chat_cmd(update: Update, context: CallbackContext) -> None:
     if str(update.message.from_user.id) != str(os.getenv("MODULE_CHAT_ADMIN")):
         return
     global blocked
-    if len(context.args) != 1:
+    if len(context.args) == 0:
         update.message.reply_text(
             "*Chat with bot using ChatGPT.*\nUsage: `/chat {msg}`.", parse_mode='Markdown')
     elif not blocked:
@@ -45,7 +45,7 @@ def chat_cmd(update: Update, context: CallbackContext) -> None:
         context.bot.sendChatAction(
             chat_id=update.message.chat_id, action=ChatAction.TYPING)
         try:
-            result = exec_chat(context.args[0])
+            result = exec_chat(" ".join(context.args))
             update.message.reply_text(result, parse_mode='Markdown')
         except Exception as e:
             if str(e):
