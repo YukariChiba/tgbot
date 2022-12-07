@@ -9,8 +9,10 @@ pyzbar
 tmdbv3api
 emoji
 cairosvg
-googletrans==3.1.0a0
+googletrans-py
 dice
 mcstatus
 mcipc
 pilmoji
+chatgpt-api
+openai
