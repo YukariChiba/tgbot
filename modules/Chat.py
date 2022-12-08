@@ -9,6 +9,7 @@ enabled = True
 
 ctx = None
 blocked = False
+blocked_show = 0
 ALLOWED_CONDITION = (
     Filters.chat_type.group &
     Filters.text &
@@ -18,6 +19,8 @@ ALLOWED_CONDITION = (
         Filters.chat(-511871661)
     )
 )
+ADMIN_LENGTH = 768
+USER_LENGTH = 384
 
 
 def load():
@@ -28,24 +31,25 @@ def load():
     print("Chat Plugin Loaded!")
 
 
-def exec_chat(msg):
+def exec_chat(msg, length=384):
     # return ctx.send_message(msg).content
-    return oa.Completion.create(model="text-davinci-003", prompt=msg, temperature=0, max_tokens=384, request_timeout=40).choices[0].text
+    return oa.Completion.create(model="text-davinci-003", prompt=msg, temperature=0, max_tokens=length, request_timeout=40).choices[0].text
 
 
 def chat_cmd(update: Update, context: CallbackContext) -> None:
-    if str(update.message.from_user.id) != str(os.getenv("MODULE_CHAT_ADMIN")):
-        return
-    global blocked
+    length = USER_LENGTH
+    global blocked, blocked_show
     if len(context.args) == 0:
         update.message.reply_text(
             "*Chat with bot using ChatGPT.*\nUsage: `/chat {msg}`.", parse_mode='Markdown')
     elif not blocked:
+        if str(update.message.from_user.id) == str(os.getenv("MODULE_CHAT_ADMIN")):
+            length = ADMIN_LENGTH
         blocked = True
         context.bot.sendChatAction(
             chat_id=update.message.chat_id, action=ChatAction.TYPING)
         try:
-            result = exec_chat(" ".join(context.args))
+            result = exec_chat(" ".join(context.args), length=length)
             update.message.reply_text(result, parse_mode='Markdown')
         except Exception as e:
             if str(e):
@@ -56,10 +60,18 @@ def chat_cmd(update: Update, context: CallbackContext) -> None:
                     "`Error: Network`", parse_mode='Markdown')
         finally:
             blocked = False
+            blocked_show = 0
+    elif blocked_show < 2:
+        update.message.reply_text(
+            "`Error: Busy`", parse_mode='Markdown')
+        blocked_show = blocked_show + 1
 
 
 def chat_random(update: Update, context: CallbackContext) -> None:
-    if (len(update.message.text) <= 16):
+    global blocked, blocked_show
+    if blocked:
+        return
+    if (len(update.message.text) <= 10):
         return
     if (random.randint(0, 256) < 245):
         return
@@ -73,6 +85,7 @@ def chat_random(update: Update, context: CallbackContext) -> None:
         pass
     finally:
         blocked = False
+        blocked_show = 0
 
 
 handlers = [CommandHandler("chat", chat_cmd, run_async=True),
