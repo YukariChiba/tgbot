@@ -1,7 +1,7 @@
 from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler
 from telegram import Update, ChatAction, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.utils.helpers import escape_markdown
-from mcstatus import MinecraftServer
+from mcstatus import JavaServer as MinecraftServer
 import base64
 enabled = True
 
