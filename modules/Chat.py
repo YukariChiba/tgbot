@@ -5,7 +5,7 @@ import os
 import openai as oa
 import random
 
-enabled = True
+enabled = False # No money
 
 ctx = None
 blocked = False
