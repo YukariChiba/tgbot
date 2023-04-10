@@ -7,7 +7,8 @@ from utils.mapRender import getImageCluster
 import os
 import emoji
 
-enabled = True
+# API Not Available
+enabled = False
 
 globe = ['AF', 'AS', 'NR', 'PA', 'AM', 'ST']
 

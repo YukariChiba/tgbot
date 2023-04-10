@@ -5,6 +5,8 @@ import requests
 from io import BytesIO
 from PIL import Image
 
+UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
+
 
 def deg2num(lat_deg, lon_deg, zoom):
     lat_rad = math.radians(lat_deg)
@@ -24,7 +26,7 @@ def num2deg(xtile, ytile, zoom):
 
 
 def getImageCluster(lat_deg, lon_deg, lat_deg2, lon_deg2, zoom):
-    smurl = r"http://tile.openstreetmap.org/{0}/{1}/{2}.png"
+    smurl = r"https://tile.openstreetmap.org/{0}/{1}/{2}.png"
     xmax, ymin = deg2num(lat_deg2, lon_deg2, zoom)
     xmin, ymax = deg2num(lat_deg, lon_deg, zoom)
     xmax = math.ceil(xmax)
@@ -34,13 +36,14 @@ def getImageCluster(lat_deg, lon_deg, lat_deg2, lon_deg2, zoom):
     Cluster = Image.new('RGB', ((xmax-xmin+1)*256-1, (ymax-ymin+1)*256-1))
     for xtile in range(xmin, xmax+1):
         for ytile in range(ymin,  ymax+1):
-            try:
-                imgurl = smurl.format(zoom, xtile, ytile)
-                imgstr = requests.get(imgurl, timeout=5)
-                tile = Image.open(BytesIO(imgstr.content))
-                Cluster.paste(tile, box=((xtile-xmin)*256,  (ytile-ymin)*255))
-            except:
-                tile = None
+            # try:
+            imgurl = smurl.format(zoom, xtile, ytile)
+            imgstr = requests.get(
+                imgurl, timeout=5, stream=True, headers={'User-Agent': UA})
+            tile = Image.open(BytesIO(imgstr.content))
+            Cluster.paste(tile, box=((xtile-xmin)*256,  (ytile-ymin)*255))
+            # except:
+            #     tile = None
     return Cluster
 
 
