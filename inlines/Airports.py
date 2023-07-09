@@ -16,7 +16,7 @@ def load():
     with open(os.getenv("MODULE_INLINE_AIRPORTDATA"), newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         headers = next(reader)
-        airports = [{h:x for (h,x) in zip(headers,row)} for row in reader}]
+        airports = [{h:x for (h,x) in zip(headers,row)} for row in reader]
     print("Airports Inline Plugin Loaded!")
 
 
@@ -41,7 +41,7 @@ def queryICAO(code):
     if len(queryResult) == 0:
         return ""
     airport = queryResult[0]
-    return {"string": "*{airport}*\n*IATA:* `{iata}`\n*ICAO:* `{icao}`\n*Region:* {region_name}\n*Country:* {country_code}".format(airport), "desc": airport["airport"]}
+    return {"string": "*{airport}*\n*IATA:* `{iata}`\n*ICAO:* `{icao}`\n*Region:* {region_name}\n*Country:* {country_code}".format(**airport), "desc": airport["airport"]}
 
 
 def run(querybody, context):
