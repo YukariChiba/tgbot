@@ -14,9 +14,9 @@ airports = []
 def load():
     global airports
     with open(os.getenv("MODULE_INLINE_AIRPORTDATA"), newline='') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
-        for row in spamreader:
-            airports.append(row)
+        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        headers = next(reader)
+        airports = [{h:x for (h,x) in zip(headers,row)} for row in reader}]
     print("Airports Inline Plugin Loaded!")
 
 
@@ -27,21 +27,21 @@ def filter(arg):
     elif not arg.isalnum() or not (len(arg) == 4 or len(arg) == 3):
         return False
     elif len(arg) == 4:
-        return any(p[5] == arg.upper() for p in airports)
+        return any(p["icao"] == arg.upper() for p in airports)
     else:
-        return any(p[4] == arg.upper() for p in airports)
+        return any(p["iata"] == arg.upper() for p in airports)
 
 
 def queryICAO(code):
     global airports
     if len(code) == 4:
-        queryResult = [p for p in airports if p[5] == code.upper()]
+        queryResult = [p for p in airports if p["icao"] == code.upper()]
     else:
-        queryResult = [p for p in airports if p[4] == code.upper()]
+        queryResult = [p for p in airports if p["iata"] == code.upper()]
     if len(queryResult) == 0:
         return ""
     airport = queryResult[0]
-    return {"string": "*{0}*\n*IATA:* `{1}`\n*ICAO:* `{2}`\n*City:* {3}\n*Country:* {4}".format(airport[1], airport[4], airport[5], airport[2], airport[3]), "desc": airport[1]}
+    return {"string": "*{airport}*\n*IATA:* `{iata}`\n*ICAO:* `{icao}`\n*Region:* {region_name}\n*Country:* {country_code}".format(airport), "desc": airport["airport"]}
 
 
 def run(querybody, context):

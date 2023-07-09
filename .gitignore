@@ -133,6 +133,7 @@ cache/
 data/traceroute
 data/Peers/*.md
 data/Dress/*.json
+data/Airports/*.csv
 
 # Test Code
 test_codes/
