@@ -15,6 +15,8 @@ dresslist_images = []
 dresslist_lite = {}
 dresslist_lite_images = []
 
+dressupstream = "https://github.com/Cute-Dress/Dress/blob/master"
+dressupstream_lite = "https://github.com/KiritakeKumi/Dress-Lite/blob/master"
 
 def formatMsg(photo):
     msg = "Location: `{}`".format(photo)
@@ -80,7 +82,7 @@ def run(update: Update, context: CallbackContext) -> None:
             if context.args[0] in dresslist.keys():
                 dress = random.choice(dresslist[context.args[0]])
                 update.message.reply_photo(
-                    "https://github.com/komeiji-satori/Dress/blob/master" + dress + "?raw=true", caption=formatMsg(dress), parse_mode='Markdown')
+                    dressupstream + dress + "?raw=true", caption=formatMsg(dress), parse_mode='Markdown')
             else:
                 update.message.reply_text(
                     "`Error: Not found.`", parse_mode='Markdown')
@@ -91,7 +93,7 @@ def run(update: Update, context: CallbackContext) -> None:
         user = random.choice(list(dresslist.keys()))
         dress = random.choice(dresslist[user])
         update.message.reply_photo(
-            "https://github.com/komeiji-satori/Dress/blob/master" + dress + "?raw=true", caption=formatMsg(dress), parse_mode='Markdown')
+            dressupstream + dress + "?raw=true", caption=formatMsg(dress), parse_mode='Markdown')
 
 
 def runlite(update: Update, context: CallbackContext) -> None:
@@ -102,7 +104,7 @@ def runlite(update: Update, context: CallbackContext) -> None:
             if context.args[0] in dresslist_lite.keys():
                 dress = random.choice(dresslist[context.args[0]])
                 update.message.reply_photo(
-                    "https://github.com/KiritakeKumi/Dress-Lite/blob/master" + dress + "?raw=true", caption=formatMsg(dress), parse_mode='Markdown')
+                    dressupstream_lite + dress + "?raw=true", caption=formatMsg(dress), parse_mode='Markdown')
             else:
                 update.message.reply_text(
                     "`Error: Not found.`", parse_mode='Markdown')
@@ -113,7 +115,7 @@ def runlite(update: Update, context: CallbackContext) -> None:
         user = random.choice(list(dresslist_lite.keys()))
         dress = random.choice(dresslist_lite[user])
         update.message.reply_photo(
-            "https://github.com/KiritakeKumi/Dress-Lite/blob/master" + dress + "?raw=true", caption=formatMsg(dress), parse_mode='Markdown')
+            dressupstream_lite + dress + "?raw=true", caption=formatMsg(dress), parse_mode='Markdown')
 
 
 handlers = [CommandHandler("dress", run, run_async=True),

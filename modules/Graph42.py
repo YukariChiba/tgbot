@@ -8,7 +8,7 @@ import json
 import shutil
 from cairosvg import svg2png
 
-enabled = True
+enabled = False
 
 
 def load():

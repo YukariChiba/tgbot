@@ -18,7 +18,7 @@ def run(update: Update, context: CallbackContext) -> None:
             emoji.emojize(":cat_face: *Get a random cat from thiscatdoesnotexist.com .*\nUsage: `/cat`."), parse_mode='Markdown')
     else:
         update.message.reply_photo(
-            "https://thiscatdoesnotexist.com/?rnd={}".format(str(random.randint(0, 31415926))))
+            "https://d2ph5fj80uercy.cloudfront.net/0{}/cat{}.jpg".format(str(random.randint(1, 6)), str(random.randint(1,5000))))
 
 
 handlers = [CommandHandler("cat", run, run_async=True)]

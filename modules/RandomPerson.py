@@ -4,7 +4,7 @@ from telegram.utils.helpers import escape_markdown
 import random
 import os
 
-enabled = True
+enabled = False # API Broken
 
 
 def load():
