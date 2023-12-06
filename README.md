@@ -6,8 +6,7 @@
 
 - Chat (OpenAI API limit)
 - Graph42 (DN42 API needs changes)
-- IngressCell (OSM map issue)
-- Maidenhead (OSM map issue)
+- IngressCell (API issue)
 - MCRCON (MC Server not available)
 - RandomPerson (API broken)
 

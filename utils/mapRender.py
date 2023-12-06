@@ -5,7 +5,8 @@ import requests
 from io import BytesIO
 from PIL import Image
 
-UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
+#UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
+UA = 'tgbot@YukariChiba/1.0'
 
 
 def deg2num(lat_deg, lon_deg, zoom):
@@ -40,6 +41,7 @@ def getImageCluster(lat_deg, lon_deg, lat_deg2, lon_deg2, zoom):
             imgurl = smurl.format(zoom, xtile, ytile)
             imgstr = requests.get(
                 imgurl, timeout=5, stream=True, headers={'User-Agent': UA})
+            print(imgstr)
             tile = Image.open(BytesIO(imgstr.content))
             Cluster.paste(tile, box=((xtile-xmin)*256,  (ytile-ymin)*255))
             # except:
@@ -48,7 +50,7 @@ def getImageCluster(lat_deg, lon_deg, lat_deg2, lon_deg2, zoom):
 
 
 if __name__ == '__main__':
-    a = getImageCluster(38.5, -77.04, 0.02,  0.05, 13)
+    a = getImageCluster(38.5, -77.04, 39.5,  -76.04, 4)
     fig = plt.figure()
     fig.patch.set_facecolor('white')
     plt.imshow(np.asarray(a))
