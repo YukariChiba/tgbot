@@ -18,7 +18,7 @@ def validFile(file, delta):
 
 def getUserProfilePhoto(user, context):
     file_id = os.getenv("CACHE_DIR") + "user_photo/" + user.lower()
-    if not os.path.isfile(file_id) or validFile(file_id, timedelta(days=int(os.getenv("USER_PHOTO_VALID_DAYS")))):
+    if not os.path.isfile(file_id) or not validFile(file_id, timedelta(days=int(os.getenv("USER_PHOTO_VALID_DAYS")))):
         site = "https://t.me/" + user
         html = urlopen(site)
         bs = BS(html, 'html.parser')   
