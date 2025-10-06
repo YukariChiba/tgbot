@@ -1,5 +1,5 @@
-import os
+from utils.init import getEnvSafe
 
-def upload(file, bot):
-    infophoto = bot.sendSticker(chat_id=os.getenv("IMAGE_UPLOAD_CHANNELID"),sticker=open(file,'rb'))
+async def upload(file, bot):
+    infophoto = await bot.sendSticker(chat_id=getEnvSafe("IMAGE_UPLOAD_CHANNELID"),sticker=open(file,'rb'))
     return infophoto["sticker"]["file_id"]

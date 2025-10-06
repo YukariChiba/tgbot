@@ -1,6 +1,5 @@
-from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler
-from telegram import Update, ChatAction, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.utils.helpers import escape_markdown
+from telegram.ext import ContextTypes, CommandHandler
+from telegram import Update
 import random
 import os
 import json
@@ -41,7 +40,7 @@ def random_all():
         return "投胎失败！\n您没能活到出生，祝您下次好运！"
 
 
-def checkarg(arg):
+def checkarg(arg: list[str]):
     if len(arg) == 0:
         return random.randint(0, 100000)
     if len(arg) == 1:
@@ -50,16 +49,16 @@ def checkarg(arg):
     return -1
 
 
-def run(update: Update, context: CallbackContext) -> None:
-    seed = checkarg(context.args)
+async def run(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    seed = checkarg(context.args or [])
     if seed == -1:
-        update.message.reply_text(
+        await update.message.reply_text(
             "*Give you a chance to reborn.*\nUsage: `/reborn [seed]`.", parse_mode='Markdown')
     else:
-        update.message.reply_text(random_all(), parse_mode='Markdown')
+        await update.message.reply_text(random_all(), parse_mode='Markdown')
 
 
-handlers = [CommandHandler("reborn", run, run_async=True)]
+handlers = [CommandHandler("reborn", run, block=False)]
 
 
 def test():

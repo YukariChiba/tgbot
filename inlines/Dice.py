@@ -3,6 +3,7 @@ import os
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 from uuid import uuid4
 import dice
+from telegram._inline.inlinequery import InlineQuery
 
 enabled = True
 
@@ -24,8 +25,8 @@ def getDice(dice_text):
     elements.sort()
     return "*投掷了骰子 [{}]*\n结果为:\n{}\n总和为: {}".format(dice_text, str(elements), sum(elements))
 
-def run(querybody, context):
+def run(querybody: InlineQuery, _):
     result = getDice(querybody.query)
     return_val = InlineQueryResultArticle(
-        id=uuid4(), title="骰子: " + querybody.query, input_message_content=InputTextMessageContent(message_text=result, parse_mode='Markdown'), description="掷出一枚骰子。", thumb_url=os.getenv("MODULE_INLINE_DICE_AVATAR"))
+        id=str(uuid4()), title="骰子: " + querybody.query, input_message_content=InputTextMessageContent(message_text=result, parse_mode='Markdown'), description="掷出一枚骰子。", thumbnail_url=os.getenv("MODULE_INLINE_DICE_AVATAR"))
     return return_val

@@ -1,0 +1,4 @@
+[tool.basedpyright]
+reportUnusedCallResult = false
+reportOptionalMemberAccess = false
+reportUnsupportedDunderAll = false

@@ -1,9 +1,5 @@
-from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler
-from telegram import Update, ChatAction, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.utils.helpers import escape_markdown
-import ipaddress
-import subprocess
-import os
+from telegram.ext import CommandHandler, ContextTypes
+from telegram import Update
 
 enabled = True
 
@@ -12,9 +8,9 @@ def load():
     print("ChatID Plugin Loaded!")
 
 
-def run(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(
+async def run(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(
         "*Chat ID:* " + str(update.message.chat.id), parse_mode='Markdown')
 
 
-handlers = [CommandHandler("chatid", run, run_async=True)]
+handlers = [CommandHandler("chatid", run, block=False)]

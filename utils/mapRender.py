@@ -41,7 +41,6 @@ def getImageCluster(lat_deg, lon_deg, lat_deg2, lon_deg2, zoom):
             imgurl = smurl.format(zoom, xtile, ytile)
             imgstr = requests.get(
                 imgurl, timeout=5, stream=True, headers={'User-Agent': UA})
-            print(imgstr)
             tile = Image.open(BytesIO(imgstr.content))
             Cluster.paste(tile, box=((xtile-xmin)*256,  (ytile-ymin)*255))
             # except:

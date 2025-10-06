@@ -9,3 +9,11 @@ def getUserName(user):
         return "Anonymous"
     else:
         return ret
+
+def getChannelName(channel):
+    if channel.title:
+        return channel.title
+    if channel.username:
+        return channel.username
+    else:
+        return "Unknown"

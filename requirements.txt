@@ -1,5 +1,6 @@
 python-dotenv
-python-telegram-bot==13.15
+# lock telegram bot version
+python-telegram-bot==22.5
 Pillow
 matplotlib
 requests
@@ -7,12 +8,10 @@ maidenhead
 beautifulsoup4
 pyzbar
 tmdbv3api
-emoji
+# pilmoji broken: https://github.com/jay3332/pilmoji/pull/40
+emoji==2.11.0
 cairosvg
 googletrans-py
 dice
 mcstatus
-mcipc
 pilmoji
-chatgpt-api
-openai

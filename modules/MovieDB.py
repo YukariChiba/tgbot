@@ -1,6 +1,5 @@
-from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler
-from telegram import Update, ChatAction, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.utils.helpers import escape_markdown
+from telegram.ext import ContextTypes, CommandHandler
+from telegram import Update
 from tmdbv3api import TMDb, Movie, TV
 import os
 
@@ -18,9 +17,9 @@ def load():
     print("MovieDB Plugin Loaded!")
 
 
-def run_tv(update: Update, context: CallbackContext) -> None:
+async def run_tv(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     global tmdb
-    arg = " ".join(context.args)
+    arg = " ".join(context.args or [])
     if len(arg) >= 1 and len(arg) <= 40:
         tv = TV()
         show = tv.search(arg)
@@ -37,21 +36,21 @@ def run_tv(update: Update, context: CallbackContext) -> None:
                 "[TMDB Link](https://www.themoviedb.org/tv/{0})".format(
                     show.id)
             if show.poster_path:
-                update.message.reply_photo(
+                await update.message.reply_photo(
                     tmdb_base_url + show.poster_path, caption=returnText, parse_mode='Markdown')
             else:
-                update.message.reply_text(returnText, parse_mode='Markdown')
+                await update.message.reply_text(returnText, parse_mode='Markdown')
         else:
-            update.message.reply_text(
+            await update.message.reply_text(
                 "`Error: Not Found`", parse_mode='Markdown')
     else:
-        update.message.reply_text(
+        await update.message.reply_text(
             "*Search for a TV series.*\nUsage: `/tvseries {TV series name}`.", parse_mode='Markdown')
 
 
-def run_movie(update: Update, context: CallbackContext) -> None:
+async def run_movie(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     global tmdb
-    arg = " ".join(context.args)
+    arg = " ".join(context.args or [])
     if len(arg) >= 1 and len(arg) <= 40:
         movie = Movie()
         mv = movie.search(arg)
@@ -68,17 +67,17 @@ def run_movie(update: Update, context: CallbackContext) -> None:
                 "[TMDB Link](https://www.themoviedb.org/movie/{0})".format(
                     mv.id)
             if mv.poster_path:
-                update.message.reply_photo(
+                await update.message.reply_photo(
                     tmdb_base_url + mv.poster_path, caption=returnText, parse_mode='Markdown')
             else:
-                update.message.reply_text(returnText, parse_mode='Markdown')
+                await update.message.reply_text(returnText, parse_mode='Markdown')
         else:
-            update.message.reply_text(
+            await update.message.reply_text(
                 "`Error: Not Found`", parse_mode='Markdown')
     else:
-        update.message.reply_text(
+        await update.message.reply_text(
             "*Search for a movie.*\nUsage: `/movie {movie name}`.", parse_mode='Markdown')
 
 
-handlers = [CommandHandler("tvseries", run_tv, run_async=True),
-            CommandHandler("movie", run_movie, run_async=True)]
+handlers = [CommandHandler("tvseries", run_tv, block=False),
+            CommandHandler("movie", run_movie, block=False)]

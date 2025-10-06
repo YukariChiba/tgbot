@@ -1,12 +1,12 @@
-from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler
-from telegram import Update, ChatAction
-from telegram.utils.helpers import escape_markdown
+from telegram.ext import ContextTypes, CommandHandler
+from telegram import Update
+from telegram.constants import ChatAction
 import os
-from datetime import timedelta, datetime
 from utils.getProfilePhoto import getUserProfilePhoto
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageFont
+from utils.init import getEnvSafe
 from utils.wrapTextImage import fitText
-from utils.userInfo import getUserName
+from utils.userInfo import getUserName, getChannelName
 import emoji
 from pilmoji import Pilmoji
 import uuid
@@ -24,9 +24,9 @@ CODE_SIZE = 20
 
 def load():
     from utils.init import chk_dir
-    chk_dir(os.getenv("CACHE_DIR") + "tmp/MakeQuote")
+    chk_dir(getEnvSafe("CACHE_DIR") + "tmp/MakeQuote")
     global baseImage
-    baseImage = Image.open(os.getenv("MODULE_MAKEQUOTE_BASEIMAGE"))
+    baseImage = Image.open(getEnvSafe("MODULE_MAKEQUOTE_BASEIMAGE"))
     print("MakeQuote Plugin Loaded!")
 
 
@@ -47,7 +47,7 @@ def putTexts(base, text_msg, text_user, text_userid):
     currentTextSize = TEXT_SIZE
     draw = Pilmoji(base)
     lines = 0
-    textFont = ImageFont.truetype(os.getenv("MODULE_MAKEQUOTE_TEXTFONT"), currentTextSize)
+    textFont = ImageFont.truetype(getEnvSafe("MODULE_MAKEQUOTE_TEXTFONT"), currentTextSize)
     texts = fitText(draw, textFont, text_msg, 640, 500)
     len_texts = len(texts.split('\n'))
 
@@ -57,7 +57,7 @@ def putTexts(base, text_msg, text_user, text_userid):
             currentTextSize = TEXT_SIZE_EXLARGE
         else:
             currentTextSize = TEXT_SIZE_LARGE
-        textFont = ImageFont.truetype(os.getenv("MODULE_MAKEQUOTE_TEXTFONT"), currentTextSize)
+        textFont = ImageFont.truetype(getEnvSafe("MODULE_MAKEQUOTE_TEXTFONT"), currentTextSize)
         texts = fitText(draw, textFont, text_msg, 640, 500)
         len_texts = len(texts.split('\n'))
 
@@ -94,53 +94,61 @@ def putTexts(base, text_msg, text_user, text_userid):
     )
 
 
-def makeQuoteGen(user, usertext, text):
+def makeQuoteGen(user: str, usertext: str, text: str):
     global baseImage, baseFont, userFont
     uuid_file = uuid.uuid4()
     base = baseImage.copy()
     userPhoto = Image.open(
-        os.getenv("CACHE_DIR") + "user_photo/" + user.lower()).resize((630, 630))
+        getEnvSafe("CACHE_DIR") + "user_photo/" + user.lower()).resize((630, 630))
     userPhotoFull = Image.new('RGBA', base.size, color=0)
     userPhotoFull.paste(userPhoto, (-40, 0))
     base = Image.alpha_composite(userPhotoFull, base)
     putTexts(base, text, "— " + usertext, "@" + user)
-    tmpfile = os.getenv("CACHE_DIR") + f"tmp/MakeQuote/{uuid_file}.png"
+    tmpfile = getEnvSafe("CACHE_DIR") + f"tmp/MakeQuote/{uuid_file}.png"
     base.save(tmpfile, "PNG")
     return tmpfile
 
 
-def makeQuote(update: Update, context: CallbackContext) -> None:
+async def makeQuote(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     reply_to = update.message.reply_to_message
     if not reply_to:
-        update.message.reply_text(
+        await update.message.reply_text(
             emoji.emojize("*Generate quote image for replied message.*\nUsage: `/makequote`."), parse_mode='Markdown')
     elif not reply_to.text:
-        update.message.reply_text(
+        await update.message.reply_text(
             emoji.emojize("`Error: No valid text.`"), parse_mode='Markdown')
     else:
-        if reply_to.forward_from:
-            username = reply_to.forward_from.username
-            username_text = getUserName(reply_to.forward_from)
+        username = None
+        if reply_to.forward_origin:
+            if reply_to.forward_origin.type == "user":
+                username = reply_to.forward_origin.sender_user.username
+                username_text = getUserName(reply_to.forward_origin.sender_user)
+            elif reply_to.forward_origin.type == "channel":
+                username = reply_to.forward_origin.chat.username
+                username_text = getChannelName(reply_to.forward_origin.chat)
         else:
             username = reply_to.from_user.username
             username_text = getUserName(reply_to.from_user)
         if username == None:
-            update.message.reply_text("No username found.")
+            await update.message.reply_text("No username found.")
             return
-        context.bot.sendChatAction(
+        await context.bot.sendChatAction(
             chat_id=update.message.chat_id, action=ChatAction.UPLOAD_PHOTO)
-        user = getUserProfilePhoto(username, context)
+        user = getUserProfilePhoto(username)
         if user == None:
-            update.message.reply_text("No profile photo found.")
+            await update.message.reply_text("No profile photo found.")
             return
         try:
-            imgfile = makeQuoteGen(username, username_text, reply_to.text)
-            update.message.reply_photo(open(imgfile, 'rb'))
+            quotetext = reply_to.text
+            if update.message.quote:
+                quotetext = "...{}...".format(update.message.quote.text)
+            imgfile = makeQuoteGen(username, username_text, quotetext)
+            await update.message.reply_photo(open(imgfile, 'rb'))
             os.remove(imgfile)
         except Exception as e:
             print(e)
-            update.message.reply_text("Message too long.")
+            await update.message.reply_text("Message too long.")
             return
 
 
-handlers = [CommandHandler("makequote", makeQuote, run_async=True)]
+handlers = [CommandHandler("makequote", makeQuote, block=False)]
